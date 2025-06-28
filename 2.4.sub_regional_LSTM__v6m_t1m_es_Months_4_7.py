@@ -167,7 +167,6 @@ class Model(nn.Module):
         return predict
 
 
-
 ##################
 # training model #
 ##################
@@ -254,11 +253,11 @@ def regional_lstm():
     train, validate, test = get_dataloader()
     # model set up
     model = Model(input_input_size=input_size, input_hidden_size=hidden_size, input_dropout_rate=dropout_rate).to(DEVICE)
-    if num != 0:
-        print("Loading parameters from: " + str(points[num]))
+    if num not in [0, 16, 21, 27, 30]:
+        print("Loading parameters from: " + str(points_subregions[num]))
         model.load_state_dict(para_last_point)
     else:
-        print("Random parameters from: " + str(points[num]))
+        print("Random parameters from: " + str(points_subregions[num]))
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.5)
     loss_func = nn.MSELoss()  # mse
@@ -289,7 +288,7 @@ if __name__ == "__main__":
     #########################
     # global hyperparameter #
     #########################
-    DEVICE = torch.device("cuda:1")
+    DEVICE = torch.device("cuda:6")
     sequence_length = 24 * 30
     batch_size = 512
     hidden_size = 256
@@ -299,16 +298,42 @@ if __name__ == "__main__":
     ##################
     # global dataset #
     ##################
-    train_start = pd.to_datetime("2014-01-01 00:00:00", format="%Y-%m-%d %H:%M:%S")
-    train_end = pd.to_datetime("2019-05-31 23:00:00", format="%Y-%m-%d %H:%M:%S")
-    validate_start = pd.to_datetime("2019-06-01 00:00:00", format="%Y-%m-%d %H:%M:%S")
-    validate_end = pd.to_datetime("2019-11-30 23:00:00", format="%Y-%m-%d %H:%M:%S")
-    test_start = pd.to_datetime("2019-12-01 00:00:00", format="%Y-%m-%d %H:%M:%S")
-    test_end = pd.to_datetime("2019-12-31 23:00:00", format="%Y-%m-%d %H:%M:%S")
+    # train_start = pd.to_datetime("2014-01-01 00:00:00", format="%Y-%m-%d %H:%M:%S")
+    # train_end = pd.to_datetime("2019-05-31 23:00:00", format="%Y-%m-%d %H:%M:%S")
+    # validate_start = pd.to_datetime("2019-06-01 00:00:00", format="%Y-%m-%d %H:%M:%S")
+    # validate_end = pd.to_datetime("2019-11-30 23:00:00", format="%Y-%m-%d %H:%M:%S")
+    # test_start = pd.to_datetime("2019-12-01 00:00:00", format="%Y-%m-%d %H:%M:%S")
+    # test_end = pd.to_datetime("2019-12-31 23:00:00", format="%Y-%m-%d %H:%M:%S")
+    train_start_months = pd.to_datetime(["2014-01-01 00:00:00"] * 12, format="%Y-%m-%d %H:%M:%S")
+    train_end_months = pd.to_datetime(["2018-06-30 23:00:00", "2018-07-31 23:00:00", "2018-08-31 23:00:00",
+                                       "2018-09-30 23:00:00", "2018-10-31 23:00:00", "2018-11-30 23:00:00",
+                                       "2018-12-31 23:00:00", "2019-01-31 23:00:00", "2019-02-28 23:00:00",
+                                       "2019-03-31 23:00:00", "2019-04-30 23:00:00", "2019-05-31 23:00:00"],
+                                      format="%Y-%m-%d %H:%M:%S")
+    validate_start_months = pd.to_datetime(["2018-07-01 00:00:00", "2018-08-01 00:00:00", "2018-09-01 00:00:00",
+                                            "2018-10-01 00:00:00", "2018-11-01 00:00:00", "2018-12-01 00:00:00",
+                                            "2019-01-01 00:00:00", "2019-02-01 00:00:00", "2019-03-01 00:00:00",
+                                            "2019-04-01 00:00:00", "2019-05-01 00:00:00", "2019-06-01 00:00:00"],
+                                           format="%Y-%m-%d %H:%M:%S")
+    validate_end_months = pd.to_datetime(["2018-12-31 23:00:00", "2019-01-31 23:00:00", "2019-02-28 23:00:00",
+                                          "2019-03-31 23:00:00", "2019-04-30 23:00:00", "2019-05-31 23:00:00",
+                                          "2019-06-30 23:00:00", "2019-07-31 23:00:00", "2019-08-31 23:00:00",
+                                          "2019-09-30 23:00:00", "2019-10-31 23:00:00", "2019-11-30 23:00:00"],
+                                         format="%Y-%m-%d %H:%M:%S")
+    test_start_months = pd.to_datetime(["2019-01-01 00:00:00", "2019-02-01 00:00:00", "2019-03-01 00:00:00",
+                                        "2019-04-01 00:00:00", "2019-05-01 00:00:00", "2019-06-01 00:00:00",
+                                        "2019-07-01 00:00:00", "2019-08-01 00:00:00", "2019-09-01 00:00:00",
+                                        "2019-10-01 00:00:00", "2019-11-01 00:00:00", "2019-12-01 00:00:00"],
+                                       format="%Y-%m-%d %H:%M:%S")
+    test_end_months = pd.to_datetime(["2019-01-31 23:00:00", "2019-02-28 23:00:00", "2019-03-31 23:00:00",
+                                      "2019-04-30 23:00:00", "2019-05-31 23:00:00", "2019-06-30 23:00:00",
+                                      "2019-07-31 23:00:00", "2019-08-31 23:00:00", "2019-09-30 23:00:00",
+                                      "2019-10-31 23:00:00", "2019-11-30 23:00:00", "2019-12-31 23:00:00"],
+                                     format="%Y-%m-%d %H:%M:%S")
     #############
     # file path #
     #############
-    caqra_path = ['caqra_4_nan_avg_0.csv', 'caqra_6_nan_avg_0.csv', 'caqra_11_nan_avg_0.csv']
+    # caqra_path = ['caqra_4_nan_avg_0.csv', 'caqra_6_nan_avg_0.csv', 'caqra_11_nan_avg_0.csv']
     # rmse_path = [r'H:\2023.8.19-LSTM-BJ-Correction\1.Beijing\rmse\rmse_sub_regional_4_nan_avg_0_v6m_t1m_es_Dec.csv',
     #              r'H:\2023.8.19-LSTM-BJ-Correction\1.Beijing\rmse\rmse_sub_regional_6_nan_avg_0_v6m_t1m_es_Dec.csv',
     #              r'H:\2023.8.19-LSTM-BJ-Correction\1.Beijing\rmse\rmse_sub_regional_11_nan_avg_v6m_t1m_es_Dec.csv']
@@ -321,12 +346,20 @@ if __name__ == "__main__":
     # para_path = [r'H:\2023.8.19-LSTM-BJ-Correction\1.Beijing\para_sub_regional\4.pth',
     #              r'H:\2023.8.19-LSTM-BJ-Correction\1.Beijing\para_sub_regional\6.pth',
     #              r'H:\2023.8.19-LSTM-BJ-Correction\1.Beijing\para_sub_regional\11.pth']
-    rmse_path = [r'./rmse/rmse_regional_4_nan_avg_0_v6m_t1m_es_Dec.csv',
-                 r'./rmse/rmse_regional_6_nan_avg_0_v6m_t1m_es_Dec.csv',
-                 r'./rmse/rmse_regional_11_nan_avg_v6m_t1m_es_Dec.csv']
-    pred_path = [r'./pred/pred_regional_4_nan_avg_0_v6m_t1m_es_Dec.csv',
-                 r'./pred/pred_regional_6_nan_avg_0_v6m_t1m_es_Dec.csv',
-                 r'./pred/pred_regional_11_nan_avg_0_v6m_t1m_es_Dec.csv']
+    # rmse_path = ['./rmse/rmse_sub_regional_4_nan_avg_0_v6m_t1m_es_Dec.csv',
+    #              './rmse/rmse_sub_regional_6_nan_avg_0_v6m_t1m_es_Dec.csv',
+    #              './rmse/rmse_sub_regional_11_nan_avg_v6m_t1m_es_Dec.csv']
+    # pred_path = ['./pred/pred_sub_regional_4_nan_avg_0_v6m_t1m_es_Dec.csv',
+    #              './pred/pred_sub_regional_6_nan_avg_0_v6m_t1m_es_Dec.csv',
+    #              './pred/pred_sub_regional_11_nan_avg_0_v6m_t1m_es_Dec.csv']
+    # para_path = [['./para_sub_regional/4_sub_0.pth', './para_sub_regional/4_sub_1.pth', './para_sub_regional/4_sub_2.pth',
+    #               './para_sub_regional/4_sub_3.pth', './para_sub_regional/4_sub_4.pth'],
+    #              ['./para_sub_regional/6_sub_0.pth', './para_sub_regional/6_sub_1.pth', './para_sub_regional/6_sub_2.pth',
+    #               './para_sub_regional/6_sub_3.pth', './para_sub_regional/6_sub_4.pth'],
+    #              ['./para_sub_regional/11_sub_0.pth', './para_sub_regional/11_sub_1.pth', './para_sub_regional/11_sub_2.pth',
+    #               './para_sub_regional/11_sub_3.pth', './para_sub_regional/11_sub_4.pth']]
+    rmse_path = ['./rmse/rmse_sub_regional_11_nan_avg_v6m_t1m_es_Month' + str(i+1) + '.csv' for i in range(12)]
+    pred_path = ['./pred/pred_sub_regional_11_nan_avg_0_v6m_t1m_es_Month' + str(i+1) + '.csv' for i in range(12)]
     ######################
     # re-index 34 points #
     ######################
@@ -334,45 +367,67 @@ if __name__ == "__main__":
               '古城', '房山', '大兴', '亦庄', '通州', '顺义', '昌平', '门头沟', '平谷', '怀柔', '密云', '延庆', '定陵',
               '八达岭', '密云水库', '东高村', '永乐店', '榆垡', '琉璃河', '前门', '永定门内', '西直门北', '南三环',
               '东四环']
-    # points_subregions = ['东四', '前门', '天坛', '永定门内', '南三环', '万寿西宫', '官园', '西直门北', '奥体中心',
-    #                      '农展馆',
-    #                      '东四环', '丰台花园', '万柳', '云岗', '古城', '北部新区',  # 16 center (1 ~ 16)
-    #                      '通州', '亦庄', '大兴', '永乐店', '榆垡',  # 5 south-east (17 ~ 21)
-    #                      '顺义', '怀柔', '密云', '密云水库', '平谷', '东高村',  # 6 north-east (22 ~ 27)
-    #                      '门头沟', '房山', '琉璃河',  # 3 south-west (28 ~ 30)
-    #                      '昌平', '定陵', '延庆', '八达岭', ]  # 4 north-west (31 ~ 34)
-    # points_idx = []
-    # for i in range(34):
-    #     points_idx.append(np.where(np.array(points) == points_subregions[i])[0][0])
+    points_subregions = ['东四', '前门', '天坛', '永定门内', '南三环', '万寿西宫', '官园', '西直门北', '奥体中心',
+                         '农展馆','东四环', '丰台花园', '万柳', '云岗', '古城', '北部新区',      # 16 center (1 ~ 16)
+                         '通州', '亦庄', '大兴', '永乐店', '榆垡',                            # 5 south-east (17 ~ 21)
+                         '顺义', '怀柔', '密云', '密云水库', '平谷', '东高村',                 # 6 north-east (22 ~ 27)
+                         '门头沟', '房山', '琉璃河',                                        # 3 south-west (28 ~ 30)
+                         '昌平', '定陵', '延庆', '八达岭', ]                                # 4 north-west (31 ~ 34)
+    points_idx = []
+    for i in range(34):
+        points_idx.append(np.where(np.array(points) == points_subregions[i])[0][0])
     ###################
     # start go go go! #
     ###################
-    for exp in range(1,3):
-        caqra_data = pd.read_csv(caqra_path[exp])
+    for month in range(4, 8):
+        print('start ' + 'Month ' + str(month+1))
+        train_start = train_start_months[month]
+        train_end = train_end_months[month]
+        validate_start = validate_start_months[month]
+        validate_end = validate_end_months[month]
+        test_start = test_start_months[month]
+        test_end = test_end_months[month]
+        # load caqra
+        # caqra_data = pd.read_csv(find_file('H:\\', caqra_path[exp]))
+        caqra_data = pd.read_csv('caqra_11_nan_avg_0.csv')
         caqra_data.index = pd.to_datetime([str(i) for i in caqra_data['date'].values], format="%Y-%m-%d %H:%M:%S")
         caqra_data = caqra_data.iloc[:, 2:]
         point_nums = 34
-        if exp == 0:
-            print("Starting Scenario 1: so2, no2, co, o3")
-            input_size = 4
-            para_path = ['./para_regional/4_' + str(i) + '.pth' for i in range(point_nums)]
-        if exp == 1:
-            print("Starting Scenario 2: so2, no2, co, o3, pm25, pm10")
-            input_size = 6
-            para_path = ['./para_regional/6_' + str(i) + '.pth' for i in range(point_nums)]
-        if exp == 2:
-            print("Starting Scenario 3: so2, no2, co, o3, pm25, pm10, temp, rh, psfc, u, v")
-            input_size = 11
-            para_path = ['./para_regional/11_' + str(i) + '.pth' for i in range(point_nums)]
+        # if exp == 0:
+        #     print("Starting Scenario 1: so2, no2, co, o3")
+        #     input_size = 4
+        #     vars_idx = []
+        #     for idx in points_idx:
+        #         vars_idx.extend([i for i in range((input_size+1) * idx, (input_size+1) * (idx + 1))])
+        #     caqra_data_re = caqra_data.iloc[:, vars_idx]
+        #     para_path = ['./para_sub_regional/4_' + str(i) + '.pth' for i in range(point_nums)]
+        # if exp == 1:
+        #     print("Starting Scenario 2: so2, no2, co, o3, pm25, pm10")
+        #     input_size = 6
+        #     vars_idx = []
+        #     for idx in points_idx:
+        #         vars_idx.extend([i for i in range((input_size+1) * idx, (input_size+1) * (idx + 1))])
+        #     caqra_data_re = caqra_data.iloc[:, vars_idx]
+        #     para_path = ['./para_sub_regional/6_' + str(i) + '.pth' for i in range(point_nums)]
+        # if exp == 2:
+        print("Starting Scenario 3: so2, no2, co, o3, pm25, pm10, temp, rh, psfc, u, v")
+        input_size = 11
+        vars_idx = []
+        for idx in points_idx:
+            vars_idx.extend([i for i in range((input_size+1) * idx, (input_size+1) * (idx + 1))])
+        caqra_data_re = caqra_data.iloc[:, vars_idx]
+        para_path = ['./para_sub_regional/month'+str(month)+'_11_' + str(i) + '.pth' for i in range(point_nums)]
         # set rmse and pred
         rmse_array = np.zeros([epoch + 1, point_nums])
         pred_array = np.zeros([pd.date_range(test_start, test_end).shape[0] * 24, point_nums])
         # obs_array = np.zeros([pd.date_range(test_start, test_end).shape[0] * 24, point_nums])
         with tqdm(total=point_nums) as pbar:
-            caqra_input = caqra_data.iloc[:, (input_size + 1) * 0:(input_size + 1) * 34]
-            print("Starting sites: "+str(points))
-            for num in range(34):
-                print("Calculating site: "+str(points[num]))
+            # 16 center (1 ~ 16)
+            caqra_input = caqra_data_re.iloc[:, (input_size+1)*0:(input_size+1)*16]
+            center = caqra_input.keys().values[input_size::input_size+1]
+            print("Starting Center sites: "+str(center))
+            for num in range(0, 16):
+                print("Calculating Center site: "+str(center[num]))
                 point_num = num
                 mean, std = get_mean_std()
                 rmse_regional, pred_regional, para_last_point = regional_lstm()
@@ -381,6 +436,63 @@ if __name__ == "__main__":
                 # obs_array[:, num] = obs_regional.reshape(len(obs_regional))
                 torch.save(para_last_point, para_path[num])
                 pbar.update(1)
-        pd.DataFrame(rmse_array).to_csv(rmse_path[exp], header=points)
-        pd.DataFrame(pred_array).to_csv(pred_path[exp], header=points)
+            # 5 south-east (17 ~ 21)
+            caqra_input = caqra_data_re.iloc[:, (input_size+1)*16:(input_size+1)*21]
+            south_east = caqra_input.keys().values[input_size::input_size+1]
+            print("Starting South-East sites: " + str(south_east))
+            for num in range(16, 21):
+                print("Calculating South-East site: " + str(south_east[num-16]))
+                point_num = num-16
+                mean, std = get_mean_std()
+                rmse_regional, pred_regional, para_last_point = regional_lstm()
+                rmse_array[:len(rmse_regional), num] = rmse_regional
+                pred_array[:, num] = pred_regional.reshape(len(pred_regional))
+                # obs_array[:, num] = obs_regional.reshape(len(obs_regional))
+                torch.save(para_last_point, para_path[num])
+                pbar.update(1)
+            # 6 north-east (22 ~ 27)
+            caqra_input = caqra_data_re.iloc[:, (input_size+1)*21:(input_size+1)*27]
+            north_east = caqra_input.keys().values[input_size::input_size+1]
+            print("Starting North-East sites: " + str(north_east))
+            for num in range(21, 27):
+                print("Calculating North-East site: " + str(north_east[num - 21]))
+                point_num = num-21
+                mean, std = get_mean_std()
+                rmse_regional, pred_regional, para_last_point = regional_lstm()
+                rmse_array[:len(rmse_regional), num] = rmse_regional
+                pred_array[:, num] = pred_regional.reshape(len(pred_regional))
+                # obs_array[:, num] = obs_regional.reshape(len(obs_regional))
+                torch.save(para_last_point, para_path[num])
+                pbar.update(1)
+            # 3 south-west (28 ~ 30)
+            caqra_input = caqra_data_re.iloc[:, (input_size+1)*27:(input_size+1)*30]
+            south_west = caqra_input.keys().values[input_size::input_size+1]
+            print("Starting South-West sites: " + str(south_west))
+            for num in range(27, 30):
+                print("Calculating South-West site: " + str(south_west[num - 27]))
+                point_num = num-27
+                mean, std = get_mean_std()
+                rmse_regional, pred_regional, para_last_point = regional_lstm()
+                rmse_array[:len(rmse_regional), num] = rmse_regional
+                pred_array[:, num] = pred_regional.reshape(len(pred_regional))
+                # obs_array[:, num] = obs_regional.reshape(len(obs_regional))
+                torch.save(para_last_point, para_path[num])
+                pbar.update(1)
+            # 4 north-west (31 ~ 34)
+            caqra_input = caqra_data_re.iloc[:, (input_size+1)*30:(input_size+1)*34]
+            north_west = caqra_input.keys().values[input_size::input_size+1]
+            print("Starting North-West sites: " + str(north_west))
+            for num in range(30, 34):
+                print("Calculating North-West site: " + str(north_west[num - 30]))
+                point_num = num-30
+                mean, std = get_mean_std()
+                rmse_regional, pred_regional, para_last_point = regional_lstm()
+                rmse_array[:len(rmse_regional), num] = rmse_regional
+                pred_array[:, num] = pred_regional.reshape(len(pred_regional))
+                # obs_array[:, num] = obs_regional.reshape(len(obs_regional))
+                torch.save(para_last_point, para_path[num])
+                pbar.update(1)
+        # save rmse and pred
+        pd.DataFrame(rmse_array).to_csv(rmse_path[month], header=points_subregions)
+        pd.DataFrame(pred_array).to_csv(pred_path[month], header=points_subregions)
         # pd.DataFrame(obs_array).to_csv(obs_path[exp], header=points)

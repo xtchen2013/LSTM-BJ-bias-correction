@@ -289,7 +289,7 @@ if __name__ == "__main__":
     #########################
     # global hyperparameter #
     #########################
-    DEVICE = torch.device("cuda:1")
+    DEVICE = torch.device("cuda:7")
     sequence_length = 24 * 30
     batch_size = 512
     hidden_size = 256
@@ -299,16 +299,42 @@ if __name__ == "__main__":
     ##################
     # global dataset #
     ##################
-    train_start = pd.to_datetime("2014-01-01 00:00:00", format="%Y-%m-%d %H:%M:%S")
-    train_end = pd.to_datetime("2019-05-31 23:00:00", format="%Y-%m-%d %H:%M:%S")
-    validate_start = pd.to_datetime("2019-06-01 00:00:00", format="%Y-%m-%d %H:%M:%S")
-    validate_end = pd.to_datetime("2019-11-30 23:00:00", format="%Y-%m-%d %H:%M:%S")
-    test_start = pd.to_datetime("2019-12-01 00:00:00", format="%Y-%m-%d %H:%M:%S")
-    test_end = pd.to_datetime("2019-12-31 23:00:00", format="%Y-%m-%d %H:%M:%S")
+    # train_start = pd.to_datetime("2014-01-01 00:00:00", format="%Y-%m-%d %H:%M:%S")
+    # train_end = pd.to_datetime("2019-05-31 23:00:00", format="%Y-%m-%d %H:%M:%S")
+    # validate_start = pd.to_datetime("2019-06-01 00:00:00", format="%Y-%m-%d %H:%M:%S")
+    # validate_end = pd.to_datetime("2019-11-30 23:00:00", format="%Y-%m-%d %H:%M:%S")
+    # test_start = pd.to_datetime("2019-12-01 00:00:00", format="%Y-%m-%d %H:%M:%S")
+    # test_end = pd.to_datetime("2019-12-31 23:00:00", format="%Y-%m-%d %H:%M:%S")
+    train_start_months = pd.to_datetime(["2014-01-01 00:00:00"] * 12, format="%Y-%m-%d %H:%M:%S")
+    train_end_months = pd.to_datetime(["2018-06-30 23:00:00", "2018-07-31 23:00:00", "2018-08-31 23:00:00",
+                                       "2018-09-30 23:00:00", "2018-10-31 23:00:00", "2018-11-30 23:00:00",
+                                       "2018-12-31 23:00:00", "2019-01-31 23:00:00", "2019-02-28 23:00:00",
+                                       "2019-03-31 23:00:00", "2019-04-30 23:00:00", "2019-05-31 23:00:00"],
+                                      format="%Y-%m-%d %H:%M:%S")
+    validate_start_months = pd.to_datetime(["2018-07-01 00:00:00", "2018-08-01 00:00:00", "2018-09-01 00:00:00",
+                                            "2018-10-01 00:00:00", "2018-11-01 00:00:00", "2018-12-01 00:00:00",
+                                            "2019-01-01 00:00:00", "2019-02-01 00:00:00", "2019-03-01 00:00:00",
+                                            "2019-04-01 00:00:00", "2019-05-01 00:00:00", "2019-06-01 00:00:00"],
+                                           format="%Y-%m-%d %H:%M:%S")
+    validate_end_months = pd.to_datetime(["2018-12-31 23:00:00", "2019-01-31 23:00:00", "2019-02-28 23:00:00",
+                                          "2019-03-31 23:00:00", "2019-04-30 23:00:00", "2019-05-31 23:00:00",
+                                          "2019-06-30 23:00:00", "2019-07-31 23:00:00", "2019-08-31 23:00:00",
+                                          "2019-09-30 23:00:00", "2019-10-31 23:00:00", "2019-11-30 23:00:00"],
+                                         format="%Y-%m-%d %H:%M:%S")
+    test_start_months = pd.to_datetime(["2019-01-01 00:00:00", "2019-02-01 00:00:00", "2019-03-01 00:00:00",
+                                        "2019-04-01 00:00:00", "2019-05-01 00:00:00", "2019-06-01 00:00:00",
+                                        "2019-07-01 00:00:00", "2019-08-01 00:00:00", "2019-09-01 00:00:00",
+                                        "2019-10-01 00:00:00", "2019-11-01 00:00:00", "2019-12-01 00:00:00"],
+                                       format="%Y-%m-%d %H:%M:%S")
+    test_end_months = pd.to_datetime(["2019-01-31 23:00:00", "2019-02-28 23:00:00", "2019-03-31 23:00:00",
+                                      "2019-04-30 23:00:00", "2019-05-31 23:00:00", "2019-06-30 23:00:00",
+                                      "2019-07-31 23:00:00", "2019-08-31 23:00:00", "2019-09-30 23:00:00",
+                                      "2019-10-31 23:00:00", "2019-11-30 23:00:00", "2019-12-31 23:00:00"],
+                                     format="%Y-%m-%d %H:%M:%S")
     #############
     # file path #
     #############
-    caqra_path = ['caqra_4_nan_avg_0.csv', 'caqra_6_nan_avg_0.csv', 'caqra_11_nan_avg_0.csv']
+    # caqra_path = ['caqra_4_nan_avg_0.csv', 'caqra_6_nan_avg_0.csv', 'caqra_11_nan_avg_0.csv']
     # rmse_path = [r'H:\2023.8.19-LSTM-BJ-Correction\1.Beijing\rmse\rmse_sub_regional_4_nan_avg_0_v6m_t1m_es_Dec.csv',
     #              r'H:\2023.8.19-LSTM-BJ-Correction\1.Beijing\rmse\rmse_sub_regional_6_nan_avg_0_v6m_t1m_es_Dec.csv',
     #              r'H:\2023.8.19-LSTM-BJ-Correction\1.Beijing\rmse\rmse_sub_regional_11_nan_avg_v6m_t1m_es_Dec.csv']
@@ -321,12 +347,14 @@ if __name__ == "__main__":
     # para_path = [r'H:\2023.8.19-LSTM-BJ-Correction\1.Beijing\para_sub_regional\4.pth',
     #              r'H:\2023.8.19-LSTM-BJ-Correction\1.Beijing\para_sub_regional\6.pth',
     #              r'H:\2023.8.19-LSTM-BJ-Correction\1.Beijing\para_sub_regional\11.pth']
-    rmse_path = [r'./rmse/rmse_regional_4_nan_avg_0_v6m_t1m_es_Dec.csv',
-                 r'./rmse/rmse_regional_6_nan_avg_0_v6m_t1m_es_Dec.csv',
-                 r'./rmse/rmse_regional_11_nan_avg_v6m_t1m_es_Dec.csv']
-    pred_path = [r'./pred/pred_regional_4_nan_avg_0_v6m_t1m_es_Dec.csv',
-                 r'./pred/pred_regional_6_nan_avg_0_v6m_t1m_es_Dec.csv',
-                 r'./pred/pred_regional_11_nan_avg_0_v6m_t1m_es_Dec.csv']
+    # rmse_path = [r'./rmse/rmse_regional_4_nan_avg_0_v6m_t1m_es_Dec.csv',
+    #              r'./rmse/rmse_regional_6_nan_avg_0_v6m_t1m_es_Dec.csv',
+    #              r'./rmse/rmse_regional_11_nan_avg_v6m_t1m_es_Dec.csv']
+    # pred_path = [r'./pred/pred_regional_4_nan_avg_0_v6m_t1m_es_Dec.csv',
+    #              r'./pred/pred_regional_6_nan_avg_0_v6m_t1m_es_Dec.csv',
+    #              r'./pred/pred_regional_11_nan_avg_0_v6m_t1m_es_Dec.csv']
+    rmse_path = ['./rmse/rmse_regional_11_nan_avg_v6m_t1m_es_Month' + str(i+1) + '.csv' for i in range(12)]
+    pred_path = ['./pred/pred_regional_11_nan_avg_0_v6m_t1m_es_Month' + str(i+1) + '.csv' for i in range(12)]
     ######################
     # re-index 34 points #
     ######################
@@ -347,23 +375,31 @@ if __name__ == "__main__":
     ###################
     # start go go go! #
     ###################
-    for exp in range(1,3):
-        caqra_data = pd.read_csv(caqra_path[exp])
+    for month in range(8, 12):
+        print('start ' + 'Month ' + str(month+1))
+        train_start = train_start_months[month]
+        train_end = train_end_months[month]
+        validate_start = validate_start_months[month]
+        validate_end = validate_end_months[month]
+        test_start = test_start_months[month]
+        test_end = test_end_months[month]
+        # load caqra
+        caqra_data = pd.read_csv('caqra_11_nan_avg_0.csv')
         caqra_data.index = pd.to_datetime([str(i) for i in caqra_data['date'].values], format="%Y-%m-%d %H:%M:%S")
         caqra_data = caqra_data.iloc[:, 2:]
         point_nums = 34
-        if exp == 0:
-            print("Starting Scenario 1: so2, no2, co, o3")
-            input_size = 4
-            para_path = ['./para_regional/4_' + str(i) + '.pth' for i in range(point_nums)]
-        if exp == 1:
-            print("Starting Scenario 2: so2, no2, co, o3, pm25, pm10")
-            input_size = 6
-            para_path = ['./para_regional/6_' + str(i) + '.pth' for i in range(point_nums)]
-        if exp == 2:
-            print("Starting Scenario 3: so2, no2, co, o3, pm25, pm10, temp, rh, psfc, u, v")
-            input_size = 11
-            para_path = ['./para_regional/11_' + str(i) + '.pth' for i in range(point_nums)]
+        # if exp == 0:
+        #     print("Starting Scenario 1: so2, no2, co, o3")
+        #     input_size = 4
+        #     para_path = ['./para_regional/4_' + str(i) + '.pth' for i in range(point_nums)]
+        # if exp == 1:
+        #     print("Starting Scenario 2: so2, no2, co, o3, pm25, pm10")
+        #     input_size = 6
+        #     para_path = ['./para_regional/6_' + str(i) + '.pth' for i in range(point_nums)]
+        # if exp == 2:
+        print("Starting Scenario 3: so2, no2, co, o3, pm25, pm10, temp, rh, psfc, u, v")
+        input_size = 11
+        para_path = ['./para_regional/month' + str(month) + '_11_' + str(i) + '.pth' for i in range(point_nums)]
         # set rmse and pred
         rmse_array = np.zeros([epoch + 1, point_nums])
         pred_array = np.zeros([pd.date_range(test_start, test_end).shape[0] * 24, point_nums])
@@ -381,6 +417,6 @@ if __name__ == "__main__":
                 # obs_array[:, num] = obs_regional.reshape(len(obs_regional))
                 torch.save(para_last_point, para_path[num])
                 pbar.update(1)
-        pd.DataFrame(rmse_array).to_csv(rmse_path[exp], header=points)
-        pd.DataFrame(pred_array).to_csv(pred_path[exp], header=points)
+        pd.DataFrame(rmse_array).to_csv(rmse_path[month], header=points)
+        pd.DataFrame(pred_array).to_csv(pred_path[month], header=points)
         # pd.DataFrame(obs_array).to_csv(obs_path[exp], header=points)
